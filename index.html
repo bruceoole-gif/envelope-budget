@@ -16,18 +16,15 @@
   <div id="app-shell">
     <header id="topbar">
       <span class="brand">Envelope</span>
+      <button id="profile-btn" class="profile-btn" aria-label="Account">?</button>
     </header>
 
     <nav id="nav" hidden>
       <a href="#/dashboard" data-nav="dashboard" class="nav-item"><span class="nav-icon" aria-hidden="true">▢</span>Dashboard</a>
       <a href="#/transactions" data-nav="transactions" class="nav-item"><span class="nav-icon" aria-hidden="true">≡</span>Transactions</a>
       <a href="#/folders" data-nav="folders" class="nav-item"><span class="nav-icon" aria-hidden="true">▤</span>Folders</a>
-      <a href="#/essentials" data-nav="essentials" class="nav-item"><span class="nav-icon" aria-hidden="true">✓</span>Essentials</a>
-      <a href="#/bills" data-nav="bills" class="nav-item"><span class="nav-icon" aria-hidden="true">◷</span>Bills</a>
-      <a href="#/goals" data-nav="goals" class="nav-item"><span class="nav-icon" aria-hidden="true">◎</span>Goals</a>
-      <a href="#/debts" data-nav="debts" class="nav-item"><span class="nav-icon" aria-hidden="true">−</span>Debts</a>
       <a href="#/reports" data-nav="reports" class="nav-item"><span class="nav-icon" aria-hidden="true">▲</span>Reports</a>
-      <a href="#/settings" data-nav="settings" class="nav-item"><span class="nav-icon" aria-hidden="true">⚙</span>Settings</a>
+      <button type="button" id="more-btn" data-nav="more" class="nav-item"><span class="nav-icon" aria-hidden="true">⋯</span>More</button>
     </nav>
 
     <main id="view-root" tabindex="-1"></main>

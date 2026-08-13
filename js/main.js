@@ -3,6 +3,7 @@ import { state, loadState, saveMeta } from './state.js';
 import { initRouter, renderCurrentRoute } from './router.js';
 import { applyTheme } from './ui/settings.js';
 import { openQuickAdd } from './ui/quickadd.js';
+import { initChrome } from './ui/chrome.js';
 import * as sync from './sync.js';
 
 async function sha256Hex(text) {
@@ -36,9 +37,10 @@ async function checkPinLock() {
 
 function wireGlobalUI() {
   document.getElementById('fab-add').addEventListener('click', () => openQuickAdd('income'));
-  document.querySelectorAll('#nav [data-nav]').forEach((el) => {
+  document.querySelectorAll('#nav a[data-nav]').forEach((el) => {
     el.addEventListener('click', () => (location.hash = '#/' + el.dataset.nav));
   });
+  initChrome();
 
   document.addEventListener('keydown', (e) => {
     const tag = document.activeElement?.tagName;
