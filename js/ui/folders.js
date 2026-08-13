@@ -7,6 +7,7 @@ import { rerender } from '../bus.js';
 import { emptyState } from './dashboard.js';
 import { folderHistory, folderBalanceSeries } from '../stats.js';
 import { sparkline } from '../charts.js';
+import { colorForIndex } from '../palette.js';
 
 export function renderFolders(root, params) {
   if (params?.id) return renderFolderDetail(root, params.id);
@@ -20,9 +21,10 @@ export function renderFolders(root, params) {
     <p class="muted">Percentages total <strong class="${total === 100 ? 'text-positive' : 'text-negative'}">${total}%</strong>${total !== 100 ? ' — should be 100%.' : ''}</p>
     ${folders.length === 0 ? emptyState('No folders yet.', 'Folders hold money by percentage after essentials are funded — savings, fun, business, taxes.') : `
       <div class="list">
-        ${folders.map((f) => {
+        ${folders.map((f, i) => {
           const bal = getBalance('folder', f.id);
           return `<a class="list-row" href="#/folders/${f.id}">
+            <span class="color-dot" style="background:${colorForIndex(i)}"></span>
             <div class="row-main"><span class="row-title">${f.name}</span><span class="row-sub">${f.percent}%${f.capCents ? ' · cap ' + formatCents(f.capCents) : ' · uncapped'} · ${f.overflowRule}</span></div>
             <span class="num row-amount ${bal < 0 ? 'text-negative' : ''}">${formatCents(bal)}</span>
           </a>`;
@@ -108,9 +110,10 @@ function renderFolderDetail(root, id) {
   const bal = getBalance('folder', id);
   const history = folderHistory(id);
   const series = folderBalanceSeries(id);
+  const color = colorForIndex(activeFolders().findIndex((x) => x.id === id));
   root.innerHTML = `
     <div class="page-head">
-      <div><a class="back-link" href="#/folders">← Folders</a><h1>${f.name}</h1></div>
+      <div><a class="back-link" href="#/folders">← Folders</a><h1><span class="color-dot" style="background:${color}"></span> ${f.name}</h1></div>
       <div class="btn-group">
         <button class="btn" data-edit>Edit</button>
         <button class="btn btn-danger" data-delete>Delete</button>
@@ -118,7 +121,7 @@ function renderFolderDetail(root, id) {
     </div>
     <p class="figure-xl ${bal < 0 ? 'text-negative' : ''}">${formatCents(bal)}</p>
     <p class="muted">${f.percent}% of remainder${f.capCents ? ' · cap ' + formatCents(f.capCents) : ' · uncapped'} · overflow: ${f.overflowRule}${f.overflowRule === 'cascade' ? ' → ' + (state.folders.find((x) => x.id === f.cascadeTargetId)?.name || '?') : ''}</p>
-    ${series.length > 1 ? sparkline(series, { width: 320, height: 60 }) : ''}
+    ${series.length > 1 ? sparkline(series, { width: 320, height: 60, color }) : ''}
     ${bal < 0 ? `<button class="btn btn-warning" data-cover>Cover this from…</button>` : ''}
     <section class="section">
       <h2>History</h2>

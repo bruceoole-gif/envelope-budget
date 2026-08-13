@@ -54,6 +54,37 @@ export function lineChart(series, { width = 560, height = 200 } = {}) {
   </svg>`;
 }
 
+// segments: [{label, value(cents), color}]
+export function donutChart(segments, { size = 180, thickness = 26, formatValue = formatCentsCompact, centerLabel = 'Total' } = {}) {
+  const filtered = segments.filter((s) => s.value > 0);
+  const total = filtered.reduce((s, d) => s + d.value, 0);
+  if (total <= 0) return `<div class="chart-empty">Nothing to show yet.</div>`;
+  const r = (size - thickness) / 2;
+  const c = size / 2;
+  const circumference = 2 * Math.PI * r;
+  let offset = 0;
+  let circles = '';
+  filtered.forEach((seg) => {
+    const frac = seg.value / total;
+    const dash = frac * circumference;
+    const gap = circumference - dash;
+    circles += `<circle cx="${c}" cy="${c}" r="${r}" fill="none" stroke="${seg.color}" stroke-width="${thickness}" stroke-linecap="butt"
+      stroke-dasharray="${dash.toFixed(2)} ${gap.toFixed(2)}" stroke-dashoffset="${(-offset).toFixed(2)}" transform="rotate(-90 ${c} ${c})">
+      <title>${seg.label}: ${formatValue(seg.value)} (${Math.round(frac * 100)}%)</title>
+    </circle>`;
+    offset += dash;
+  });
+  const svg = `<svg viewBox="0 0 ${size} ${size}" class="donut" role="img" aria-label="Breakdown chart">
+    ${circles}
+    <text x="${c}" y="${c - 3}" text-anchor="middle" class="donut-center-value">${formatValue(total)}</text>
+    <text x="${c}" y="${c + 16}" text-anchor="middle" class="donut-center-label">${centerLabel}</text>
+  </svg>`;
+  const legend = `<ul class="donut-legend">
+    ${filtered.map((seg) => `<li><span class="color-dot" style="background:${seg.color}"></span><span class="legend-label">${seg.label}</span><span class="legend-value num">${formatValue(seg.value)}</span><span class="legend-pct muted">${Math.round((seg.value / total) * 100)}%</span></li>`).join('')}
+  </ul>`;
+  return `<div class="donut-wrap">${svg}${legend}</div>`;
+}
+
 export function sparkline(values, { width = 160, height = 40, color = 'var(--accent)' } = {}) {
   if (values.length < 2) return `<svg viewBox="0 0 ${width} ${height}" class="sparkline"></svg>`;
   const max = Math.max(...values);
