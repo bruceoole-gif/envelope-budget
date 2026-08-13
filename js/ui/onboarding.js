@@ -127,7 +127,7 @@ async function stepDone(el, root) {
     await createIncome({ amountCents: cash, dateISO: todayISO(), payee: 'Starting balance', note: 'Onboarding' });
   }
   await saveMeta({ onboardingComplete: true, onboardingStep: 0 });
-  el.innerHTML = `<h1>All set</h1><p class="muted">${cash > 0 ? formatCents(cash) + ' allocated across your essentials and folders.' : 'You can add income any time — it will flow through the waterfall automatically.'}</p>
+  el.innerHTML = `<h1>All set</h1><p class="muted">${cash > 0 ? `<span class="num">${formatCents(cash)}</span> allocated across your essentials and folders.` : 'You can add income any time — it will flow through the waterfall automatically.'}</p>
     <div class="modal-actions"><button class="btn btn-primary" data-go>Go to dashboard</button></div>`;
   el.querySelector('[data-go]').addEventListener('click', () => (location.hash = '#/dashboard'));
 }

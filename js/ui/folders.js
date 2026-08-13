@@ -25,7 +25,7 @@ export function renderFolders(root, params) {
           const bal = getBalance('folder', f.id);
           return `<a class="list-row" href="#/folders/${f.id}">
             <span class="color-dot" style="background:${colorForIndex(i)}"></span>
-            <div class="row-main"><span class="row-title">${f.name}</span><span class="row-sub">${f.percent}%${f.capCents ? ' · cap ' + formatCents(f.capCents) : ' · uncapped'} · ${f.overflowRule}</span></div>
+            <div class="row-main"><span class="row-title">${f.name}</span><span class="row-sub">${f.percent}%${f.capCents ? ' · cap <span class="num">' + formatCents(f.capCents) + '</span>' : ' · uncapped'} · ${f.overflowRule}</span></div>
             <span class="num row-amount ${bal < 0 ? 'text-negative' : ''}">${formatCents(bal)}</span>
           </a>`;
         }).join('')}
@@ -121,7 +121,7 @@ function renderFolderDetail(root, id) {
       </div>
     </div>
     <p class="figure-xl ${bal < 0 ? 'text-negative' : ''}">${formatCents(bal)}</p>
-    <p class="muted">${f.percent}% of remainder${f.capCents ? ' · cap ' + formatCents(f.capCents) : ' · uncapped'} · overflow: ${f.overflowRule}${f.overflowRule === 'cascade' ? ' → ' + (state.folders.find((x) => x.id === f.cascadeTargetId)?.name || '?') : ''}</p>
+    <p class="muted">${f.percent}% of remainder${f.capCents ? ' · cap <span class="num">' + formatCents(f.capCents) + '</span>' : ' · uncapped'} · overflow: ${f.overflowRule}${f.overflowRule === 'cascade' ? ' → ' + (state.folders.find((x) => x.id === f.cascadeTargetId)?.name || '?') : ''}</p>
     ${series.length > 1 ? sparkline(series, { width: 320, height: 60, color }) : ''}
     ${bal < 0 ? `<button class="btn btn-warning" data-cover>Cover this from…</button>` : ''}
     <section class="section">
@@ -146,7 +146,7 @@ async function handleDelete(f) {
       return;
     }
     openModal(
-      `<p>This folder holds ${formatCents(bal)}. Choose where it goes before deleting.</p>
+      `<p>This folder holds <span class="num">${formatCents(bal)}</span>. Choose where it goes before deleting.</p>
        <select data-dest>${listAllAccounts().filter((a) => !(a.type === 'folder' && a.id === f.id)).map((a) => `<option value="${a.type}:${a.id}">${a.name}</option>`).join('')}</select>
        <div class="modal-actions"><button class="btn" data-cancel>Cancel</button><button class="btn btn-danger" data-confirm>Move & delete</button></div>`,
       {
@@ -177,7 +177,7 @@ function openCoverModal(f, bal) {
   const need = Math.abs(bal);
   const sources = listAllAccounts().filter((a) => !(a.type === 'folder' && a.id === f.id));
   openModal(
-    `<p>Cover ${formatCents(need)} for "${f.name}" from:</p>
+    `<p>Cover <span class="num">${formatCents(need)}</span> for "${f.name}" from:</p>
      <select data-src>${sources.map((a) => `<option value="${a.type}:${a.id}">${a.name}</option>`).join('')}</select>
      <label>Amount<input data-amt inputmode="decimal" value="${(need / 100).toFixed(2)}"></label>
      <div class="modal-actions"><button class="btn" data-cancel>Cancel</button><button class="btn btn-primary" data-confirm>Transfer</button></div>`,

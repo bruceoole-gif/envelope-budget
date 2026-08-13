@@ -41,6 +41,8 @@ function defaultMeta() {
     lastExportAt: null,
     createdAt: iso,
     sync: { url: '', anonKey: '', accessToken: null, refreshToken: null, userId: null, email: null, lastSyncAt: null, lastCursor: {} },
+    navOrder: ['dashboard', 'transactions', 'folders', 'reports', 'essentials', 'bills', 'goals', 'debts'],
+    navPrimaryCount: 4,
   };
 }
 
@@ -50,6 +52,8 @@ export async function loadState() {
   );
   state.meta = metaArr.find((m) => m.id === 'meta') || defaultMeta();
   if (!state.meta.sync) state.meta.sync = defaultMeta().sync;
+  if (!state.meta.navOrder) state.meta.navOrder = defaultMeta().navOrder;
+  if (!state.meta.navPrimaryCount) state.meta.navPrimaryCount = defaultMeta().navPrimaryCount;
   state.essentials = essentials;
   state.folders = folders;
   state.transactions = transactions.filter((t) => !t.deleted);

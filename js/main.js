@@ -37,9 +37,6 @@ async function checkPinLock() {
 
 function wireGlobalUI() {
   document.getElementById('fab-add').addEventListener('click', () => openQuickAdd('income'));
-  document.querySelectorAll('#nav a[data-nav]').forEach((el) => {
-    el.addEventListener('click', () => (location.hash = '#/' + el.dataset.nav));
-  });
   initChrome();
 
   document.addEventListener('keydown', (e) => {

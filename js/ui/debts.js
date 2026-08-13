@@ -30,7 +30,7 @@ export function renderDebts(root) {
           return `<div class="list-row debt-row">
             <div class="row-main">
               <span class="row-title">${d.name}</span>
-              <span class="row-sub">${d.aprPercent}% APR · min ${formatCents(d.minPaymentCents)}</span>
+              <span class="row-sub">${d.aprPercent}% APR · min <span class="num">${formatCents(d.minPaymentCents)}</span></span>
               <span class="row-sub ${proj.neverPaysOff ? 'text-negative' : ''}">${proj.neverPaysOff ? 'At this minimum, the balance will not shrink — increase your payment.' : `Paid off in ~${proj.months} months (${formatDateHuman(addDays(todayISO(), proj.months * 30))})`}</span>
             </div>
             <span class="num row-amount text-negative">${formatCents(d.balanceCents)}</span>

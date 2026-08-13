@@ -110,7 +110,8 @@ p { margin: 0 0 8px; }
 body.hide-amounts .num,
 body.hide-amounts .figure-xl,
 body.hide-amounts .figure-lg,
-body.hide-amounts .row-amount {
+body.hide-amounts .row-amount,
+body.hide-amounts .donut-center-value {
   filter: blur(7px);
   user-select: none;
 }
@@ -149,20 +150,26 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .sheet-row:hover { background: var(--surface); }
 .sheet-row .nav-icon { width: 22px; text-align: center; color: var(--accent); flex-shrink: 0; }
 
+.reorder-list { display: flex; flex-direction: column; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin: 12px 0; }
+.reorder-row { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-bottom: 1px solid var(--border); background: var(--bg-elevated); }
+.reorder-row:last-child { border-bottom: none; }
+.reorder-row .nav-icon { width: 20px; text-align: center; color: var(--text-muted); flex-shrink: 0; }
+.reorder-divider { border-top: 2px dashed var(--accent); }
+
 /* Mobile-first: nav lives in a fixed bar at the BOTTOM of the screen, thumb-reachable, instead
    of forcing a reach-and-swipe at the top. Desktop switches it to a left sidebar below. */
 :root { --bottom-nav-h: 64px; }
 #nav {
-  display: flex; overflow-x: auto; gap: 2px; padding: 6px 8px calc(6px + env(safe-area-inset-bottom, 0px));
+  display: flex; gap: 2px; padding: 6px 8px calc(6px + env(safe-area-inset-bottom, 0px));
   background: var(--bg-elevated); border-top: 1px solid var(--border);
   position: fixed; left: 0; right: 0; bottom: 0; top: auto; height: var(--bottom-nav-h);
   z-index: 40; box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.06);
 }
 .nav-item {
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
-  padding: 6px 12px; border-radius: var(--radius-sm); font-size: 0.68rem; color: var(--text-muted);
-  white-space: nowrap; flex-shrink: 0; transition: color var(--dur) var(--ease), background var(--dur) var(--ease);
-  min-width: 56px;
+  padding: 6px 4px; border-radius: var(--radius-sm); font-size: 0.68rem; color: var(--text-muted);
+  white-space: nowrap; transition: color var(--dur) var(--ease), background var(--dur) var(--ease);
+  flex: 1 1 0; min-width: 0;
 }
 .nav-icon { font-size: 1.15rem; }
 .nav-item:hover { color: var(--text); background: var(--surface); }
@@ -191,7 +198,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
     border-right: 1px solid var(--border); border-top: none; padding: 20px 12px; overflow-x: visible;
     box-shadow: none;
   }
-  .nav-item { flex-direction: row; justify-content: flex-start; font-size: 0.86rem; padding: 9px 12px; min-width: unset; }
+  .nav-item { flex: none; flex-direction: row; justify-content: flex-start; font-size: 0.86rem; padding: 9px 12px; min-width: unset; }
   .nav-icon { width: 20px; }
   #view-root { grid-area: main; padding: 32px 40px 60px; overflow-y: auto; }
   #fab-add { bottom: 24px; }

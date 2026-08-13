@@ -10,6 +10,7 @@ import { renderDebts } from './ui/debts.js';
 import { renderReports } from './ui/reports.js';
 import { renderSettings } from './ui/settings.js';
 import { renderOnboarding } from './ui/onboarding.js';
+import { refreshNavActiveState } from './ui/chrome.js';
 
 const routes = [
   { pattern: /^#\/dashboard$/, render: renderDashboard, nav: 'dashboard' },
@@ -36,12 +37,8 @@ function currentRoute() {
   return { route: routes[0], match: null };
 }
 
-function renderNav(activeNav) {
-  const navEl = document.getElementById('nav');
-  if (!navEl) return;
-  navEl.hidden = !state.meta.onboardingComplete;
-  navEl.querySelectorAll('[data-nav]').forEach((el) => el.classList.toggle('nav-active', el.dataset.nav === activeNav));
-  document.getElementById('profile-btn')?.classList.toggle('profile-btn-active', location.hash === '#/settings');
+export function currentNavKey() {
+  return currentRoute().route.nav;
 }
 
 export function renderCurrentRoute() {
@@ -52,7 +49,7 @@ export function renderCurrentRoute() {
   const { route, match } = currentRoute();
   root().scrollTop = 0;
   route.render(root(), match ? { id: match[1] } : undefined);
-  renderNav(route.nav);
+  refreshNavActiveState();
 }
 
 export function initRouter() {

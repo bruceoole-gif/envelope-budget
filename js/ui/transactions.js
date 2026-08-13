@@ -119,7 +119,7 @@ function openTxDetail(id, root) {
           const preview = previewVoid(id);
           const ok = await confirmModal({
             title: 'Delete transaction?',
-            body: `This reverses: ${preview.beforeEntries.map((e) => `${accountName(e.acctType, e.acctId)} ${e.deltaCents >= 0 ? '−' : '+'}${formatCents(Math.abs(e.deltaCents))}`).join(', ')}.`,
+            body: `This reverses: ${preview.beforeEntries.map((e) => `${accountName(e.acctType, e.acctId)} <span class="num">${e.deltaCents >= 0 ? '−' : '+'}${formatCents(Math.abs(e.deltaCents))}</span>`).join(', ')}.`,
             confirmLabel: 'Delete', danger: true,
           });
           if (!ok) return;

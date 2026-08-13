@@ -77,7 +77,7 @@ export function renderDashboard(root) {
             <div class="list-row essential-row">
               <div class="row-main">
                 <span class="row-title">${e.name}</span>
-                <span class="row-sub">${formatCents(e.fundedCents)} of ${formatCents(e.targetCents)}</span>
+                <span class="row-sub"><span class="num">${formatCents(e.fundedCents)}</span> of <span class="num">${formatCents(e.targetCents)}</span></span>
               </div>
               <div class="progress-track"><div class="progress-fill ${e.isFullyFunded ? 'fill-positive' : 'fill-warning'}" style="width:${Math.min(100, (e.fundedCents / Math.max(1, e.targetCents)) * 100)}%"></div></div>
             </div>`).join('')}
@@ -95,7 +95,7 @@ export function renderDashboard(root) {
               <span class="color-dot" style="background:${colorForIndex(i)}"></span>
               <div class="row-main">
                 <span class="row-title">${f.name}</span>
-                <span class="row-sub">${f.percent}%${f.capCents ? ' · cap ' + formatCents(f.capCents) : ''}</span>
+                <span class="row-sub">${f.percent}%${f.capCents ? ' · cap <span class="num">' + formatCents(f.capCents) + '</span>' : ''}</span>
               </div>
               <span class="num row-amount ${bal < 0 ? 'text-negative' : ''}">${formatCents(bal)}</span>
               ${pct != null ? `<div class="progress-track"><div class="progress-fill ${pct >= 100 ? 'fill-warning' : 'fill-positive'}" style="width:${pct}%;background:${colorForIndex(i)}"></div></div>` : ''}

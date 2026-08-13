@@ -22,7 +22,7 @@ export function renderGoals(root) {
           return `<div class="list-row goal-row">
             <div class="row-main">
               <span class="row-title">${g.name}</span>
-              <span class="row-sub">${formatCents(bal)} of ${formatCents(g.targetCents)} by ${g.targetDate} · need ${formatCents(perPeriod)}/period</span>
+              <span class="row-sub"><span class="num">${formatCents(bal)}</span> of <span class="num">${formatCents(g.targetCents)}</span> by ${g.targetDate} · need <span class="num">${formatCents(perPeriod)}</span>/period</span>
               <div class="progress-track"><div class="progress-fill fill-positive" style="width:${pct}%"></div></div>
             </div>
             <div class="btn-group">

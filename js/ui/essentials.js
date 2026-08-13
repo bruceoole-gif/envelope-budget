@@ -22,7 +22,7 @@ export function renderEssentials(root) {
               <button class="icon-btn" data-up="${e.id}" ${i === 0 ? 'disabled' : ''} aria-label="Move up">↑</button>
               <button class="icon-btn" data-down="${e.id}" ${i === essentials.length - 1 ? 'disabled' : ''} aria-label="Move down">↓</button>
             </div>
-            <div class="row-main"><span class="row-title">${e.name}</span><span class="row-sub">Target ${formatCents(e.targetCents)} per period · balance ${formatCents(bal)}</span></div>
+            <div class="row-main"><span class="row-title">${e.name}</span><span class="row-sub">Target <span class="num">${formatCents(e.targetCents)}</span> per period · balance <span class="num">${formatCents(bal)}</span></span></div>
             <div class="btn-group">
               <button class="btn" data-edit="${e.id}">Edit</button>
               <button class="btn btn-danger" data-delete="${e.id}">Delete</button>
@@ -72,7 +72,7 @@ async function handleDelete(id) {
   const bal = getBalance('essential', id);
   if (bal !== 0) {
     openModal(
-      `<p>"${e.name}" holds ${formatCents(bal)}. Choose where it goes before deleting.</p>
+      `<p>"${e.name}" holds <span class="num">${formatCents(bal)}</span>. Choose where it goes before deleting.</p>
        <select data-dest>${listAllAccounts().filter((a) => !(a.type === 'essential' && a.id === id)).map((a) => `<option value="${a.type}:${a.id}">${a.name}</option>`).join('')}</select>
        <div class="modal-actions"><button class="btn" data-cancel>Cancel</button><button class="btn btn-danger" data-confirm>Move & delete</button></div>`,
       {
