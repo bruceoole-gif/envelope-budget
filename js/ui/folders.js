@@ -52,7 +52,8 @@ function openFolderForm(folder = null) {
   openModal(
     `<form data-folder-form>
       <label>Name<input required name="name" value="${folder?.name || ''}"></label>
-      <label>Percent of remainder<input required inputmode="decimal" name="percent" value="${folder?.percent ?? ''}"></label>
+      <label>Percent of remainder<input inputmode="decimal" name="percent" placeholder="0" value="${folder?.percent ?? ''}"></label>
+      <p class="muted small">Leave at 0 to create the folder now and set a share later — it just won't receive income automatically until then.</p>
       <p class="muted">Other folders total ${othersTotal}%. <span data-drift></span></p>
       <label class="checkbox-label"><input type="checkbox" name="hasCap" ${folder?.capCents != null ? 'checked' : ''}> Set a dollar cap</label>
       <label data-cap-field style="display:${folder?.capCents != null ? '' : 'none'}">Cap<input inputmode="decimal" name="cap" value="${folder?.capCents != null ? (folder.capCents / 100).toFixed(2) : ''}"></label>
@@ -80,8 +81,8 @@ function openFolderForm(folder = null) {
         el.querySelector('[data-cancel]').addEventListener('click', close);
         form.addEventListener('submit', async (e) => {
           e.preventDefault();
-          const percent = parseFloat(form.percent.value);
-          if (isNaN(percent) || percent <= 0) return showToast('Enter a valid percent.', { kind: 'error' });
+          const percent = form.percent.value.trim() === '' ? 0 : parseFloat(form.percent.value);
+          if (isNaN(percent) || percent < 0) return showToast('Percent can’t be negative.', { kind: 'error' });
           const capCents = form.hasCap.checked ? parseDollarsToCents(form.cap.value) : null;
           const data = {
             name: form.name.value.trim(), percent,

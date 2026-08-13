@@ -136,12 +136,14 @@ export function renderSettings(root) {
       ` : `
         <div class="field-row">
           <label>Email<input data-auth-email type="email"></label>
-          <label>Password<input data-auth-pass type="password"></label>
+          <label>Password<input data-auth-pass type="password" minlength="6"></label>
         </div>
+        <p class="muted small">Password needs at least 6 characters. This account is just for this app — separate from your Supabase login.</p>
         <div class="btn-group">
           <button class="btn" data-sign-in>Sign in</button>
-          <button class="btn" data-sign-up>Create account</button>
+          <button class="btn btn-primary" data-sign-up>Create account</button>
         </div>
+        <p class="auth-msg" data-auth-msg hidden></p>
       `}
     </section>
 
@@ -186,27 +188,43 @@ export function renderSettings(root) {
     showToast('Connection saved.');
     rerender();
   });
+  const authMsgEl = root.querySelector('[data-auth-msg]');
+  function setAuthMsg(text, isError) {
+    if (!authMsgEl) return;
+    authMsgEl.textContent = text;
+    authMsgEl.hidden = !text;
+    authMsgEl.classList.toggle('text-negative', !!isError);
+    authMsgEl.classList.toggle('text-positive', !isError && !!text);
+  }
   const signInBtn = root.querySelector('[data-sign-in]');
   if (signInBtn) signInBtn.addEventListener('click', async () => {
-    if (!sync.isConfigured()) return showToast('Save your Supabase connection first.', { kind: 'error' });
+    if (!sync.isConfigured()) return setAuthMsg('Save your Supabase connection above first.', true);
+    setAuthMsg('Signing in…', false);
     try {
       await sync.signIn(root.querySelector('[data-auth-email]').value, root.querySelector('[data-auth-pass]').value);
       showToast('Signed in.');
       sync.startAutoSync();
       rerender();
     } catch (err) {
+      setAuthMsg(err.message, true);
       showToast(err.message, { kind: 'error' });
     }
   });
   const signUpBtn = root.querySelector('[data-sign-up]');
   if (signUpBtn) signUpBtn.addEventListener('click', async () => {
-    if (!sync.isConfigured()) return showToast('Save your Supabase connection first.', { kind: 'error' });
+    if (!sync.isConfigured()) return setAuthMsg('Save your Supabase connection above first.', true);
+    setAuthMsg('Creating account…', false);
     try {
       const res = await sync.signUp(root.querySelector('[data-auth-email]').value, root.querySelector('[data-auth-pass]').value);
-      if (res.needsEmailConfirmation) showToast('Check your email to confirm the account, then sign in.', { timeout: 8000 });
-      else { showToast('Account created and signed in.'); sync.startAutoSync(); }
-      rerender();
+      if (res.needsEmailConfirmation) {
+        setAuthMsg('Check your email to confirm the account, then sign in here.', false);
+      } else {
+        showToast('Account created and signed in.');
+        sync.startAutoSync();
+        rerender();
+      }
     } catch (err) {
+      setAuthMsg(err.message, true);
       showToast(err.message, { kind: 'error' });
     }
   });

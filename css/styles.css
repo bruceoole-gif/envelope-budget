@@ -10,25 +10,25 @@ svg { display: block; }
 
 /* ---------- Tokens ---------- */
 :root {
-  --bg: #f3efe6;
-  --bg-elevated: #fbf9f4;
-  --surface: #ece6d8;
-  --border: #d9d0bd;
-  --text: #221f1a;
-  --text-muted: #6e6555;
-  --accent: #94661c;
-  --accent-ink: #fff8ec;
-  --positive: #3c6b4a;
-  --negative: #a13a2a;
-  --warning: #96631a;
-  --shadow-sm: 0 1px 2px rgba(30, 25, 15, 0.06), 0 1px 1px rgba(30, 25, 15, 0.04);
-  --shadow-md: 0 6px 20px rgba(30, 25, 15, 0.1), 0 2px 6px rgba(30, 25, 15, 0.06);
-  --shadow-lg: 0 16px 40px rgba(30, 25, 15, 0.16), 0 4px 12px rgba(30, 25, 15, 0.08);
+  --bg: #f4f5f7;
+  --bg-elevated: #ffffff;
+  --surface: #e9ebef;
+  --border: #dde1e7;
+  --text: #14161a;
+  --text-muted: #5b6472;
+  --accent: #1e56e0;
+  --accent-ink: #ffffff;
+  --positive: #15803d;
+  --negative: #b91c1c;
+  --warning: #b45309;
+  --shadow-sm: 0 1px 2px rgba(20, 22, 26, 0.06), 0 1px 1px rgba(20, 22, 26, 0.04);
+  --shadow-md: 0 6px 20px rgba(20, 22, 26, 0.1), 0 2px 6px rgba(20, 22, 26, 0.06);
+  --shadow-lg: 0 16px 40px rgba(20, 22, 26, 0.16), 0 4px 12px rgba(20, 22, 26, 0.08);
   --shadow: var(--shadow-sm);
   --radius: 14px;
   --radius-sm: 9px;
   --radius-pill: 999px;
-  --accent-rgb: 148, 102, 28;
+  --accent-rgb: 30, 86, 224;
   --font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --font-mono: ui-monospace, "Cascadia Mono", "Segoe UI Mono", "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
   --dur: 160ms;
@@ -37,18 +37,18 @@ svg { display: block; }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #17150f;
-    --bg-elevated: #201d15;
-    --surface: #24211a;
-    --border: #3a3527;
-    --text: #f1ecdf;
-    --text-muted: #a89d84;
-    --accent: #d3a24c;
-    --accent-ink: #1c1710;
-    --positive: #7fbf94;
-    --negative: #e08066;
-    --warning: #d3a24c;
-    --accent-rgb: 211, 162, 76;
+    --bg: #111318;
+    --bg-elevated: #181b21;
+    --surface: #1f232b;
+    --border: #2b303a;
+    --text: #eef1f6;
+    --text-muted: #8b93a3;
+    --accent: #5b8cff;
+    --accent-ink: #0b1220;
+    --positive: #4ade80;
+    --negative: #f87171;
+    --warning: #fbbf24;
+    --accent-rgb: 91, 140, 255;
     --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
     --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.45), 0 2px 8px rgba(0, 0, 0, 0.3);
     --shadow-lg: 0 20px 48px rgba(0, 0, 0, 0.55), 0 6px 16px rgba(0, 0, 0, 0.35);
@@ -56,18 +56,18 @@ svg { display: block; }
   }
 }
 :root[data-theme="dark"] {
-  --bg: #17150f;
-  --bg-elevated: #201d15;
-  --surface: #24211a;
-  --border: #3a3527;
-  --text: #f1ecdf;
-  --text-muted: #a89d84;
-  --accent: #d3a24c;
-  --accent-ink: #1c1710;
-  --positive: #7fbf94;
-  --negative: #e08066;
-  --warning: #d3a24c;
-  --accent-rgb: 211, 162, 76;
+  --bg: #111318;
+  --bg-elevated: #181b21;
+  --surface: #1f232b;
+  --border: #2b303a;
+  --text: #eef1f6;
+  --text-muted: #8b93a3;
+  --accent: #5b8cff;
+  --accent-ink: #0b1220;
+  --positive: #4ade80;
+  --negative: #f87171;
+  --warning: #fbbf24;
+  --accent-rgb: 91, 140, 255;
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
   --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.45), 0 2px 8px rgba(0, 0, 0, 0.3);
   --shadow-lg: 0 20px 48px rgba(0, 0, 0, 0.55), 0 6px 16px rgba(0, 0, 0, 0.35);
@@ -324,8 +324,11 @@ textarea { min-height: 70px; resize: vertical; }
 }
 .toast-in { opacity: 1; transform: translateY(0); }
 .toast-out { opacity: 0; }
-.toast-action { color: var(--accent); font-weight: 600; }
+.toast-action { color: var(--accent); font-weight: 600; flex-shrink: 0; }
+.toast-close { opacity: 0.6; flex-shrink: 0; font-size: 0.75rem; padding: 2px; }
+.toast-close:hover { opacity: 1; }
 .toast-error { background: var(--negative); color: #fff; }
+.toast-error .toast-action { color: #fff; text-decoration: underline; }
 
 /* ---------- Lock screen ---------- */
 #lock-screen { position: fixed; inset: 0; background: var(--bg); z-index: 100; display: flex; align-items: center; justify-content: center; }
@@ -368,3 +371,5 @@ textarea { min-height: 70px; resize: vertical; }
 .compare-table td:first-child, .compare-table th:first-child { text-align: left; }
 
 .tx-detail .list { margin: 12px 0; }
+
+.auth-msg { margin-top: 10px; font-size: 0.86rem; }

@@ -89,10 +89,10 @@ function stepFolders(el, root) {
         </div>`).join('')}
       </div>
       <button type="button" class="btn-link" data-add>+ Add folder</button>
-      <p class="${total === 100 ? 'text-positive' : 'text-negative'}">Total: ${total}%${total !== 100 ? ' — should be 100%' : ''}</p>
+      <p class="${total === 100 ? 'text-positive' : 'text-negative'}">Total: ${total}%${total !== 100 ? ' — should be 100%, but you can adjust this later' : ''}</p>
       <div class="modal-actions">
         <button class="btn" data-back>Back</button>
-        <button class="btn btn-primary" data-next ${total !== 100 && rows.some((r) => r.name.trim()) ? 'disabled' : ''}>Continue</button>
+        <button class="btn btn-primary" data-next>Continue</button>
       </div>`;
     el.querySelector('[data-add]').addEventListener('click', () => { sync(); rows.push({ name: '', percent: '' }); draw(); });
     el.querySelectorAll('[data-remove]').forEach((b) => b.addEventListener('click', () => { sync(); rows.splice(Number(b.closest('[data-row]').dataset.row), 1); draw(); }));
@@ -100,9 +100,8 @@ function stepFolders(el, root) {
       sync();
       const t = rows.reduce((s, r) => s + (parseFloat(r.percent) || 0), 0);
       const totalEl = el.querySelector('.modal-actions').previousElementSibling;
-      totalEl.textContent = `Total: ${t}%${t !== 100 ? ' — should be 100%' : ''}`;
+      totalEl.textContent = `Total: ${t}%${t !== 100 ? ' — should be 100%, but you can adjust this later' : ''}`;
       totalEl.className = t === 100 ? 'text-positive' : 'text-negative';
-      el.querySelector('[data-next]').disabled = t !== 100 && rows.some((r) => r.name.trim());
     }));
     el.querySelector('[data-back]').addEventListener('click', () => goToStep(1, root));
     el.querySelector('[data-next]').addEventListener('click', async () => {

@@ -4,7 +4,7 @@
 // the source of truth and this layer just reconciles it with Postgres via plain REST (PostgREST +
 // GoTrue), last-write-wins by updatedAt. No SDK, no CDN dependency.
 
-import { state, saveMeta, loadState } from './state.js';
+import { state, saveMeta, loadState, onChange } from './state.js';
 import { dbGetAll, dbPutFromRemote, dbClearDirty } from './db.js';
 
 const SYNCED_STORES = ['meta', 'essentials', 'folders', 'transactions', 'bills', 'debts', 'goals'];
@@ -202,9 +202,21 @@ export async function syncAll() {
 }
 
 let autoTimer = null;
+let debounceTimer = null;
+
+// Fires shortly after any local change, so sync feels immediate rather than waiting for the
+// 60s heartbeat. Guarded by `syncing` so it doesn't react to the notify() calls syncAll() itself
+// triggers via saveMeta()/loadState() when it applies pulled changes.
+function scheduleDebouncedSync() {
+  if (syncing || !isConfigured() || !isSignedIn()) return;
+  clearTimeout(debounceTimer);
+  debounceTimer = setTimeout(() => syncAll(), 3000);
+}
+
 export function startAutoSync() {
   if (autoTimer) return;
   window.addEventListener('online', () => syncAll());
   autoTimer = setInterval(() => syncAll(), 60000);
+  onChange(scheduleDebouncedSync);
   syncAll();
 }
