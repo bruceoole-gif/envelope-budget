@@ -129,29 +129,33 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 }
 .brand { font-weight: 700; letter-spacing: -0.01em; font-size: 1.05rem; }
 
+/* Mobile-first: nav lives in a fixed bar at the BOTTOM of the screen, thumb-reachable, instead
+   of forcing a reach-and-swipe at the top. Desktop switches it to a left sidebar below. */
+:root { --bottom-nav-h: 64px; }
 #nav {
-  display: flex; overflow-x: auto; gap: 2px; padding: 4px 8px;
-  background: var(--bg-elevated); border-bottom: 1px solid var(--border);
-  position: sticky; top: 49px; z-index: 4;
+  display: flex; overflow-x: auto; gap: 2px; padding: 6px 8px calc(6px + env(safe-area-inset-bottom, 0px));
+  background: var(--bg-elevated); border-top: 1px solid var(--border);
+  position: fixed; left: 0; right: 0; bottom: 0; top: auto; height: var(--bottom-nav-h);
+  z-index: 40; box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.06);
 }
 .nav-item {
-  display: flex; flex-direction: column; align-items: center; gap: 2px;
-  padding: 8px 12px; border-radius: var(--radius-sm); font-size: 0.72rem; color: var(--text-muted);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+  padding: 6px 12px; border-radius: var(--radius-sm); font-size: 0.68rem; color: var(--text-muted);
   white-space: nowrap; flex-shrink: 0; transition: color var(--dur) var(--ease), background var(--dur) var(--ease);
   min-width: 56px;
 }
-.nav-icon { font-size: 1.1rem; }
+.nav-icon { font-size: 1.15rem; }
 .nav-item:hover { color: var(--text); background: var(--surface); }
 .nav-item.nav-active { color: var(--accent); background: color-mix(in srgb, var(--accent) 14%, var(--surface)); font-weight: 600; }
 
-#view-root { flex: 1; padding: 20px 20px 96px; max-width: 880px; width: 100%; margin: 0 auto; }
+#view-root { flex: 1; padding: 20px 20px calc(var(--bottom-nav-h) + 88px); max-width: 880px; width: 100%; margin: 0 auto; }
 
 #fab-add {
-  position: fixed; right: 20px; bottom: 24px; width: 58px; height: 58px; border-radius: 50%;
+  position: fixed; right: 20px; bottom: calc(var(--bottom-nav-h) + 16px); width: 58px; height: 58px; border-radius: 50%;
   background: linear-gradient(155deg, color-mix(in srgb, var(--accent) 88%, white 12%), var(--accent));
   color: var(--accent-ink); font-size: 1.8rem; line-height: 1; font-weight: 300;
   display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-lg);
-  z-index: 6; transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+  z-index: 41; transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease), bottom var(--dur) var(--ease);
 }
 #fab-add:hover { transform: scale(1.06) translateY(-2px); }
 #fab-add:active { transform: scale(0.97); }
@@ -160,13 +164,15 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   #app-shell { flex-direction: row; }
   #topbar { display: none; }
   #nav {
-    flex-direction: column; width: 200px; height: 100vh; position: sticky; top: 0;
-    border-right: 1px solid var(--border); border-bottom: none; padding: 20px 12px; overflow-x: visible;
+    flex-direction: column; width: 200px; height: 100vh; position: sticky; top: 0; bottom: auto;
+    border-right: 1px solid var(--border); border-top: none; padding: 20px 12px; overflow-x: visible;
+    box-shadow: none;
   }
   #nav::before { content: "Envelope"; font-weight: 700; padding: 0 12px 16px; font-size: 1.05rem; }
   .nav-item { flex-direction: row; justify-content: flex-start; font-size: 0.86rem; padding: 9px 12px; min-width: unset; }
   .nav-icon { width: 20px; }
   #view-root { padding: 32px 40px 60px; }
+  #fab-add { bottom: 24px; }
 }
 
 /* ---------- Cards / sections / lists ---------- */
@@ -180,6 +186,11 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   box-shadow: var(--shadow-sm);
 }
 .hero .page-head { margin-bottom: 0; }
+/* The floating quick-add button already covers this — drop the duplicate top-of-screen button
+   on narrow screens so there's one less thing to reach for. */
+@media (max-width: 859px) {
+  .hero [data-quick-add] { display: none; }
+}
 
 .card {
   background: var(--bg-elevated); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px;
