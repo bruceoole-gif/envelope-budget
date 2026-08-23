@@ -7,11 +7,7 @@ import { showToast } from './toast.js';
 import { rerender } from '../bus.js';
 import * as sync from '../sync.js';
 import { loadState } from '../state.js';
-
-async function sha256Hex(text) {
-  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
-  return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, '0')).join('');
-}
+import { sha256Hex, biometricsAvailable, registerBiometric, removeBiometric } from './lock.js';
 
 function csvEscape(v) {
   const s = String(v ?? '');
@@ -105,7 +101,11 @@ export function renderSettings(root) {
 
     <section class="section">
       <h2>Security</h2>
-      ${meta.pinHash ? `<button class="btn" data-remove-pin>Remove PIN lock</button>` : `<button class="btn" data-set-pin>Set a PIN lock</button>`}
+      <p class="muted">The screen hides itself the instant you switch away, and if a PIN or biometric lock is set below, it's required again every time you come back — not just once per session.</p>
+      <div class="btn-group">
+        ${meta.pinHash ? `<button class="btn" data-remove-pin>Remove PIN lock</button>` : `<button class="btn btn-primary" data-set-pin>Set a PIN lock</button>`}
+        <span data-bio-section></span>
+      </div>
       <p class="muted">Your data never leaves this device unless you set up sync below, under your own account.</p>
     </section>
 
@@ -179,6 +179,30 @@ export function renderSettings(root) {
   if (pinBtn) pinBtn.addEventListener('click', () => openPinForm());
   const removePinBtn = root.querySelector('[data-remove-pin]');
   if (removePinBtn) removePinBtn.addEventListener('click', async () => { await saveMeta({ pinHash: null }); rerender(); });
+
+  const bioSection = root.querySelector('[data-bio-section]');
+  if (meta.webauthnCredentialId) {
+    bioSection.innerHTML = `<button class="btn" data-remove-bio>Remove biometric unlock</button>`;
+    bioSection.querySelector('[data-remove-bio]').addEventListener('click', async () => {
+      await removeBiometric();
+      rerender();
+      showToast('Biometric unlock removed.');
+    });
+  } else {
+    biometricsAvailable().then((avail) => {
+      if (!avail || bioSection !== root.querySelector('[data-bio-section]')) return;
+      bioSection.innerHTML = `<button class="btn" data-add-bio>Enable biometric unlock</button>`;
+      bioSection.querySelector('[data-add-bio]').addEventListener('click', async () => {
+        try {
+          await registerBiometric();
+          rerender();
+          showToast('Biometric unlock enabled.');
+        } catch (err) {
+          showToast(err.message, { kind: 'error' });
+        }
+      });
+    });
+  }
 
   root.querySelector('[data-sync-save]').addEventListener('click', async () => {
     const url = root.querySelector('[data-sync-url]').value;

@@ -4,36 +4,8 @@ import { initRouter, renderCurrentRoute } from './router.js';
 import { applyTheme } from './ui/settings.js';
 import { openQuickAdd } from './ui/quickadd.js';
 import { initChrome } from './ui/chrome.js';
+import { initLock, requireInitialUnlock } from './ui/lock.js';
 import * as sync from './sync.js';
-
-async function sha256Hex(text) {
-  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
-  return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, '0')).join('');
-}
-
-async function checkPinLock() {
-  if (!state.meta.pinHash) return true;
-  if (sessionStorage.getItem('eb_unlocked') === '1') return true;
-  return new Promise((resolve) => {
-    const overlay = document.getElementById('lock-screen');
-    overlay.hidden = false;
-    const form = overlay.querySelector('form');
-    const errorEl = overlay.querySelector('.lock-error');
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const hash = await sha256Hex(form.pin.value);
-      if (hash === state.meta.pinHash) {
-        sessionStorage.setItem('eb_unlocked', '1');
-        overlay.hidden = true;
-        resolve(true);
-      } else {
-        errorEl.textContent = 'Incorrect PIN.';
-        form.pin.value = '';
-        form.pin.focus();
-      }
-    });
-  });
-}
 
 function wireGlobalUI() {
   document.getElementById('fab-add').addEventListener('click', () => openQuickAdd('income'));
@@ -64,8 +36,8 @@ async function boot() {
   await loadState();
   applyTheme();
 
-  const unlocked = await checkPinLock();
-  if (!unlocked) return;
+  initLock();
+  await requireInitialUnlock();
 
   wireGlobalUI();
   initRouter();

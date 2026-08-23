@@ -37,6 +37,7 @@ function defaultMeta() {
     onboardingComplete: false,
     onboardingStep: 0,
     pinHash: null,
+    webauthnCredentialId: null,
     hideAmounts: false,
     lastExportAt: null,
     createdAt: iso,

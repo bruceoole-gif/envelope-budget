@@ -1,7 +1,7 @@
 // Bump this on every deploy that changes any cached file — it's what forces old caches (and
 // stale phone installs) to drop and re-fetch. The fetch handler is network-first, so this mostly
 // just controls the offline fallback; the version bump matters for forcing SW re-activation.
-const CACHE = 'envelope-v5';
+const CACHE = 'envelope-v6';
 const PRECACHE = [
   './',
   './index.html',
@@ -19,6 +19,7 @@ const PRECACHE = [
   './js/state.js',
   './js/stats.js',
   './js/ui/chrome.js',
+  './js/ui/lock.js',
   './js/sync.js',
   './js/waterfall.js',
   './js/ui/dashboard.js',

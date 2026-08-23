@@ -30,13 +30,16 @@
   <div id="toast-root" aria-live="polite"></div>
 
   <div id="lock-screen" hidden>
-    <form>
+    <div class="lock-content">
       <h1>Envelope</h1>
-      <p class="muted">Enter your PIN</p>
-      <input type="password" inputmode="numeric" name="pin" autocomplete="off" autofocus>
-      <p class="lock-error text-negative" role="alert"></p>
-      <button type="submit" class="btn btn-primary">Unlock</button>
-    </form>
+      <p class="muted" data-lock-subtitle>Enter your PIN</p>
+      <button type="button" class="btn btn-primary" data-biometric-btn hidden>Use biometrics</button>
+      <form>
+        <input type="password" inputmode="numeric" name="pin" autocomplete="off">
+        <p class="lock-error text-negative" role="alert"></p>
+        <button type="submit" class="btn btn-primary">Unlock</button>
+      </form>
+    </div>
   </div>
 
   <script type="module" src="./js/main.js"></script>
